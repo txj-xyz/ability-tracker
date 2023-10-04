@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ability Tracker Configuration!</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <h2>Enter the ability tracker URL below:</h2>
+    <form id="myForm">
+      <label for="url">URL:</label>
+      <input type="text" placeholder="localhost:9989" id="url" name="url" onkeyup="check()" /><br /><br />
+      <input type="button" value="Submit" class="disabled" onclick="submitForm()" />
+
+    </form>
+  </body>
+  <script src="renderer.js"></script>
+</html>
