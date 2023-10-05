@@ -8,6 +8,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 let hookStarted = false;
+let hookURL = '';
 
 
 const createWindow = () => {
@@ -24,50 +25,63 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // Listen for the front-end request coming in to configure the event sending to the endpoint
-    ipcMain.on('keyAPIConfiguration', (event, message) => {
+    ipcMain.on('start-native-hooks', (event, url, enabled) => {
         // if the configuration sent over is wrong the rest of this will break but somehow we have to test        
         // the connection at this point
-        if(!message.url) {
+        if(!url) {
             console.error('Error getting the URL');
-            return event.returnValue = void 1;
+            return event.returnValue = void 0;
         }
         
         // Start UIOhook for key sending
         if(!hookStarted) {
             uIOhook.start();
             hookStarted = true;
+            hookURL = url;
+            uIOhook.on('keydown', (key) => handleKeySend(hookURL, key));
+            return (event.returnValue = void 0);
         }
 
-        // Register event listener for all keydown strokes
-        hookStarted ? uIOhook.on('keydown', (keyStrokeData) => {
-            try {
-                void handleKeySend(message.url, keyStrokeData);
-            } catch (error) {
-                console.log(error)
-            }
-        }) : void 1;
-
-        // prevent electron from crashing
-        event.returnValue = void 1;
-
-        //I dont think this is gonna loop but yeah should be ok now
+        if(url && hookStarted) { 
+            hookURL = url;
+            return (event.returnValue = void 0);
+        }
+        // if everything is already started dont do anything
+        return (event.returnValue = void 0);
     });
+
+    ipcMain.on('stop-native-hooks', (event, state) => {
+        if(state && hookStarted) {
+            uIOhook.stop();
+            return (event.returnValue = void 0);
+        }
+        return (event.returnValue = void 0);
+    });
+
+
 };
 
+// let lastkeyPressed = 0;
+let headers = new Headers();
+headers.append('Content-Type', 'application/json');
+
 // Keydown event send to URL
-function handleKeySend(url, keyData) {
+function handleKeySend({ url }, keyData) {
     console.log(url, keyData)
-    const h = new Headers();
-    h.append('Content-Type', 'application/json');
-    const r = JSON.stringify(keyData);
+    // let samekeyPushed = lastkeyPressed === keyData.keycode;
+    // if (samekeyPushed) return void 0;
+    // lastkeyPressed = keyData.keycode;
+
+    // implement a better system then below this line, because no security etc
+
     const o = {
         method: 'POST',
-        headers: h,
-        body: r,
-        redirect: 'follow' // Follow redirects
+        headers,
+        body: JSON.stringify(keyData),
+        redirect: 'follow', // Follow redirects
     };
 
     // Send web request to URL

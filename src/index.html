@@ -10,7 +10,8 @@
     <form id="myForm">
       <label for="url">URL:</label>
       <input type="text" placeholder="localhost:9989" id="url" name="url" onkeyup="check()" /><br /><br />
-      <input type="button" value="Submit" class="disabled" onclick="submitForm()" />
+      <input type="button" value="Start" class="disabled" onclick="enableNativeHooks()" />
+      <input type="button" value="Stop" onclick="disableNativeHooks()" />
 
     </form>
   </body>

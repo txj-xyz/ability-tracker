@@ -5,5 +5,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('keyAPI', {
     // Send out a keystroke to the IPC listener on the backend
     // when the render process finds the submitForm () call
-    sendKeystroke: (url) => ipcRenderer.sendSync('keyAPIConfiguration', { url }),
+    startHooks: (url) => ipcRenderer.sendSync('start-native-hooks', { url }, true),
+    stopHooks: () => ipcRenderer.sendSync('stop-native-hooks', true),
 });
