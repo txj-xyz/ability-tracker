@@ -14,8 +14,9 @@ let hookURL = '';
 const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 300,
+        height: 350,
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
