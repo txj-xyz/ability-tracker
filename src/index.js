@@ -10,7 +10,6 @@ if (require('electron-squirrel-startup')) {
 let hookStarted = false;
 let hookURL = '';
 
-
 const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -30,15 +29,15 @@ const createWindow = () => {
 
     // Listen for the front-end request coming in to configure the event sending to the endpoint
     ipcMain.on('start-native-hooks', (event, url, enabled) => {
-        // if the configuration sent over is wrong the rest of this will break but somehow we have to test        
+        // if the configuration sent over is wrong the rest of this will break but somehow we have to test
         // the connection at this point
-        if(!url) {
+        if (!url) {
             console.error('Error getting the URL');
-            return event.returnValue = void 0;
+            return (event.returnValue = void 0);
         }
-        
+
         // Start UIOhook for key sending
-        if(!hookStarted) {
+        if (!hookStarted) {
             uIOhook.start();
             hookStarted = true;
             hookURL = url;
@@ -46,7 +45,7 @@ const createWindow = () => {
             return (event.returnValue = void 0);
         }
 
-        if(url && hookStarted) { 
+        if (url && hookStarted) {
             hookURL = url;
             return (event.returnValue = void 0);
         }
@@ -54,15 +53,14 @@ const createWindow = () => {
         return (event.returnValue = void 0);
     });
 
+    // stop the listener on request
     ipcMain.on('stop-native-hooks', (event, state) => {
-        if(state && hookStarted) {
+        if (state && hookStarted) {
             uIOhook.stop();
             return (event.returnValue = void 0);
         }
         return (event.returnValue = void 0);
     });
-
-
 };
 
 // let lastkeyPressed = 0;
@@ -71,7 +69,7 @@ headers.append('Content-Type', 'application/json');
 
 // Keydown event send to URL
 function handleKeySend({ url }, keyData) {
-    console.log(url, keyData)
+    console.log(url, keyData);
     // let samekeyPushed = lastkeyPressed === keyData.keycode;
     // if (samekeyPushed) return void 0;
     // lastkeyPressed = keyData.keycode;
@@ -88,8 +86,8 @@ function handleKeySend({ url }, keyData) {
     // Send web request to URL
     fetch(url, o)
         .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log('error', error));
+        .then(console.log)
+        .catch(console.error);
 }
 
 // Start the app when ready

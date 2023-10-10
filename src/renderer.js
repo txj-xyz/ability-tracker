@@ -18,15 +18,14 @@ function disableNativeHooks() {
 function check() {
     let url = document.getElementById('url')?.value;
     // check if its a valid URL
-    let checkURL;
-    try {
-        console.log(url ? (url.match(/localhost/gim) ? true : false) : false);
-        checkURL = url ? (url.match(/localhost/gim) ? true : false) : false;
-        // checkURL = new URL(url) ? true : false;
-    } catch (error) {
-        checkURL = false;
-    }
+    // let checkURL;
+    // try {
+    //     checkURL = url ? (url.match(/localhost/gim) ? true : false) : false;
+    //     // checkURL = new URL(url) ? true : false;
+    // } catch (error) {
+    //     checkURL = false;
+    // }
     const button = document.querySelector('input[type="button"]');
-    console.log(!checkURL || !url ? 'remove' : 'add');
-    button.classList[!checkURL || !url ? 'add' : 'remove']('disabled');
+    console.log(!url ? 'remove' : 'add');
+    button.classList[!url ? 'add' : 'remove']('disabled');
 }
